@@ -1,5 +1,5 @@
-jQuery(function($) {
-	
+jQuery(document).ready(function($){
+
 	// the upload image button, saves the id and outputs a preview of the image
 	var imageFrame;
 	$('.meta_box_upload_image_button').click(function(event) {
@@ -30,15 +30,15 @@ jQuery(function($) {
 		
 		// set up our select handler
 		imageFrame.on( 'select', function() {
-			selection = imageFrame.state().get('selection');
+			selection = imageFrame.state().get('selection').toJSON();
 			
 			if ( ! selection )
 			return;
 			
 			// loop through the selected files
-			selection.each( function( attachment ) {
-				console.log(attachment);
-				var src = attachment.attributes.sizes.full.url;
+			$(selection).each(function(i) {
+				var attachment = selection[i];
+				var src = attachment.sizes.full.url;
 				var id = attachment.id;
 				
 				$div.find('.meta_box_preview_image').attr('src', src);
