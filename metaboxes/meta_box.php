@@ -464,6 +464,7 @@ class Custom_Add_Meta_Box {
 				meta_box_find_field_type( 'image', $this->fields ),
 				meta_box_find_field_type( 'file', $this->fields )
 			) ) )
+				wp_enqueue_media(); //WP 3.5 FIX
 				wp_enqueue_script( 'meta_box', CUSTOM_METABOXES_DIR . '/js/scripts.js', $deps );
 			
 			// css
