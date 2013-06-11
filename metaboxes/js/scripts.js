@@ -2,7 +2,9 @@ jQuery(document).ready(function($){
 
 	// the upload image button, saves the id and outputs a preview of the image
 	var imageFrame;
-	$('.meta_box_upload_image_button').click(function(event) {
+	function uploadImage(event)
+	{
+		console.log('click');
 		event.preventDefault();
 		
 		var options, attachment;
@@ -48,7 +50,8 @@ jQuery(document).ready(function($){
 		
 		// open the frame
 		imageFrame.open();
-	});
+	};
+	$('.meta_box_upload_image_button').bind('click', { event: event }, uploadImage);
 	
 	// the remove image link, removes the image id from the hidden field and replaces the image preview
 	$('.meta_box_clear_image_button').click(function() {
@@ -133,6 +136,10 @@ jQuery(document).ready(function($){
 		clone.find('select.chosen').removeAttr('style', '').removeAttr('id', '').removeClass('chzn-done').data('chosen', null).next().remove();
 		clone.find('input.regular-text, textarea, select').val('');
 		clone.find('input[type=checkbox], input[type=radio]').attr('checked', false);
+		clone.find('.meta_box_upload_image').val('0');
+		clone.find('.meta_box_preview_image').attr('src','');
+		clone.find('.meta_box_upload_image_button').bind('click', { event: event }, uploadImage);
+		
 		row.after(clone);
 		// increment name and id
 		clone.find('input, textarea, select')
@@ -158,11 +165,16 @@ jQuery(document).ready(function($){
 		return false;
 	});
 		
+	
 	$('.meta_box_repeatable tbody').sortable({
 		opacity: 0.6,
 		revert: true,
 		cursor: 'move',
-		handle: '.hndle'
+		handle: '.hndle',
+		update: function(event, ui) {
+
+		}
+		
 	});
 	
 	// post_drop_sort	
@@ -176,7 +188,7 @@ jQuery(document).ready(function($){
         update: function(event, ui) {
 			var result = $(this).sortable('toArray');
 			var thisID = $(this).attr('id');
-			$('.store-' + thisID).val(result) 
+			$('.store-' + thisID).val(result) 			
 		}
     });
 
