@@ -1,30 +1,14 @@
-Reusable Custom WordPress Meta Boxes
+Metakit - Reusable Custom WordPress Meta Boxes
 ====================================
 
-### No longer supported - please fork to continue development on your own.
-
-Contributors: [tammyhart](http://github.com/tammyhart)
-
-Original Tutorial Series: (http://wp.tutsplus.com/author/tammy/)
+Metakit is a fork of a project by: [tammyhart](http://github.com/tammyhart)
 
 
-Latest Update
+Latest Updates
 -------------
 
-Image and file upload buttons now use the new 3.5 media uploader!
-
-
-Description
------------
-
-This project was originally a tutorial for WPTuts+, but as I continued to use the code in my own 
-projects, I kept improving it and making the resusable part even better. Rather than update the 
-tutorial, I decided to make it an open source project here where developers can keep up with 
-improvements as well as contribute their own.
-
-This project creates a class which makes it easy to create a custom meta box for any 
-post type using a master switch case for the meta box and fields HTML and an array containing 
-the data for the fields you want to use.
+- Fixed the "manage" link bug
+- Image and file upload buttons now use the new 3.5 media uploader!
 
 
 ### Fields Included
@@ -96,26 +80,3 @@ Examples
 	 * var $js bool including javascript or not
 	 */
 	$sample_box = new custom_add_meta_box( 'sample_box', 'Sample Box', $fields, 'post', true );
-
-
-Changelog
----------
-
-### 0.4 (January 8, 2013)
-* Cleaned up docs
-* Cleaned up js
-* Cleaned up the field output and nested repeatables
-* Fixed several bugs 
-
-### 0.3 (November 10, 2012)
-* Added file field
-* Added function to simplify the add file and add image thickbox
-* added more fields to the Repeatable
-* Added "chosen" and "multiple" options to select fields
-
-### 0.2 (September 11, 2012)
-* Functions combined into a class
-* Major code cleanup and some docing added
-
-### 0.1 (March 31, 2012)
-* First release
