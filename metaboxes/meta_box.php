@@ -1,7 +1,7 @@
 <?php
 
 // metaboxes directory constant
-define( 'CUSTOM_METABOXES_DIR', get_template_directory_uri() . '/metaboxes' );
+define( 'CUSTOM_METABOXES_DIR', get_template_directory_uri() . '/lib/metaboxes' );
 
 /**
  * recives data about a form field and spits out the proper html
@@ -114,7 +114,7 @@ function custom_meta_box_field( $field, $meta = null, $repeatable = null ) {
 			foreach ( $posts as $item )
 				echo '<option value="' . $item->ID . '"' . selected( is_array( $meta ) && in_array( $item->ID, $meta ), true, false ) . '>' . $item->post_title . '</option>';
 			$post_type_object = get_post_type_object( $post_type );
-			echo '</select> &nbsp;<span class="description"><a href="' . admin_url( 'edit.php?post_type=' . $post_type . '">Manage ' . $post_type_object->label ) . '</a></span><br />' . $desc;
+			echo '</select> &nbsp;<span class="description"><a href="' . admin_url( 'edit.php?post_type=' . $post_type[0] . '">'.__('Manage').' ' . $post_type_object->label ) . '</a></span><br />' . $desc;
 		break;
 		// post_checkboxes
 		case 'post_checkboxes':
@@ -232,7 +232,7 @@ function custom_meta_box_field( $field, $meta = null, $repeatable = null ) {
 				<thead>
 					<tr>
 						<th><span class="sort_label"></span></th>
-						<th>Fields</th>
+						<th>'.__(Fields).'</th>
 						<th><a class="meta_box_repeatable_add" href="#"></a></th>
 					</tr>
 				</thead>
@@ -262,7 +262,7 @@ function custom_meta_box_field( $field, $meta = null, $repeatable = null ) {
 				<tfoot>
 					<tr>
 						<th><span class="sort_label"></span></th>
-						<th>Fields</th>
+						<th>'.__(Fields).'</th>
 						<th><a class="meta_box_repeatable_add" href="#"></a></th>
 					</tr>
 				</tfoot>';
@@ -464,7 +464,7 @@ class Custom_Add_Meta_Box {
 				meta_box_find_field_type( 'image', $this->fields ),
 				meta_box_find_field_type( 'file', $this->fields )
 			) ) )
-				wp_enqueue_media(); //WP 3.5 FIX
+				wp_enqueue_media();
 				wp_enqueue_script( 'meta_box', CUSTOM_METABOXES_DIR . '/js/scripts.js', $deps );
 			
 			// css
