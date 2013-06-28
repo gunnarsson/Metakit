@@ -191,7 +191,10 @@ function custom_meta_box_field( $field, $meta = null, $repeatable = null ) {
 		break;
 		// date
 		case 'date':
-			echo '<input type="text" class="datepicker" name="' . esc_attr( $name ) . '" id="' . esc_attr( $id ) . '" value="' . $meta . '" size="30" />
+			$date_format = get_option( 'date_format' );
+			$meta_converted = date($date_format, $meta);
+			
+			echo '<input type="text" class="datepicker" name="' . esc_attr( $name ) . '" id="' . esc_attr( $id ) . '" value="' . $meta_converted . '" size="30" />
 					<br />' . $desc;
 		break;
 		// slider
@@ -401,6 +404,80 @@ function meta_box_array_map_r( $func, $meta, $sanitizer ) {
 	}
 	return $newMeta;
 }
+/**
+ * Converts a php date format to js
+ *
+ * @param	string	$php_format		PHP date format
+ * @return	string				JS date format (useful for datepicker)
+ *
+*/
+
+function date_format_php_to_js( $php_format ) 
+{
+    $PHP_matching_JS = array(
+            // Day
+            'd' => 'dd',
+            'D' => 'D',
+            'j' => 'd',
+            'l' => 'DD',
+            'N' => '',
+            'S' => '',
+            'w' => '',
+            'z' => 'o',
+            // Week
+            'W' => '',
+            // Month
+            'F' => 'MM',
+            'm' => 'mm',
+            'M' => 'M',
+            'n' => 'm',
+            't' => '',
+            // Year
+            'L' => '',
+            'o' => '',
+            'Y' => 'yy',
+            'y' => 'y',
+            // Time
+            'a' => '',
+            'A' => '',
+            'B' => '',
+            'g' => '',
+            'G' => '',
+            'h' => '',
+            'H' => '',
+            'i' => '',
+            's' => '',
+            'u' => ''
+    );
+
+    $js_format = "";
+    $escaping = false;
+
+    for($i = 0; $i < strlen($php_format); $i++)
+    {
+        $char = $php_format[$i];
+        if($char === '\\') // PHP date format escaping character
+        {
+            $i++;
+            if($escaping) $js_format .= $php_format[$i];
+            else $js_format .= '\'' . $php_format[$i];
+            $escaping = true;
+        }
+        else
+        {
+            if($escaping) { $js_format .= "'"; $escaping = false; }
+            if(isset($PHP_matching_JS[$char]))
+                $js_format .= $PHP_matching_JS[$char];
+            else
+            {
+                $js_format .= $char;
+            }
+        }
+    }
+
+    return $js_format;
+}
+
 
 /**
  * takes in a few peices of data and creates a custom meta box
@@ -478,6 +555,7 @@ class Custom_Add_Meta_Box {
 		}
 	}
 	
+		
 	/**
 	 * adds scripts to the head for special fields with extra js requirements
 	 */
@@ -491,8 +569,11 @@ class Custom_Add_Meta_Box {
 				switch( $field['type'] ) {
 					// date
 					case 'date' :
+						$date_format = get_option( 'date_format' );
+						$js_date_format = date_format_php_to_js($date_format);
+						
 						echo '$("#' . $field['id'] . '").datepicker({
-								dateFormat: \'yy-mm-dd\'
+								dateFormat: \''.$js_date_format.'\'
 							});';
 					break;
 					// slider
@@ -585,6 +666,7 @@ class Custom_Add_Meta_Box {
 				$sanitizer = null;
 				continue;
 			}
+			
 			if( in_array( $field['type'], array( 'tax_select', 'tax_checkboxes' ) ) ) {
 				// save taxonomies
 				if ( isset( $_POST[$field['id']] ) ) {
@@ -606,6 +688,9 @@ class Custom_Add_Meta_Box {
 						$new = meta_box_array_map_r( 'meta_box_sanitize', $new, $sanitizer );
 					else
 						$new = meta_box_sanitize( $new, $sanitizer );
+						if( $field['type'] == 'date') {	
+							$new = strtotime($new);
+						}	
 					update_post_meta( $post_id, $field['id'], $new );
 				}
 			}
