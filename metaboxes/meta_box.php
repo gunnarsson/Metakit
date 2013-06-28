@@ -192,8 +192,11 @@ function custom_meta_box_field( $field, $meta = null, $repeatable = null ) {
 		// date
 		case 'date':
 			$date_format = get_option( 'date_format' );
-			$meta_converted = date($date_format, $meta);
-			
+			if($meta != ''){
+				$meta_converted = date($date_format, $meta);
+			}else {
+				$meta_converted = '';
+			}
 			echo '<input type="text" class="datepicker" name="' . esc_attr( $name ) . '" id="' . esc_attr( $id ) . '" value="' . $meta_converted . '" size="30" />
 					<br />' . $desc;
 		break;
@@ -541,17 +544,23 @@ class Custom_Add_Meta_Box {
 				meta_box_find_field_type( 'image', $this->fields ),
 				meta_box_find_field_type( 'file', $this->fields )
 			) ) )
+			
 				wp_enqueue_media();
 				wp_enqueue_script( 'meta_box', CUSTOM_METABOXES_DIR . '/js/scripts.js', $deps );
-			
+				
+			if ( in_array( true, array( 
+				meta_box_find_field_type( 'date', $this->fields ), 
+			) ) )
+				wp_enqueue_script('jquery-ui-datepicker');
+				
+				
 			// css
-			$deps = array();
-			wp_register_style( 'jqueryui', CUSTOM_METABOXES_DIR . '/css/jqueryui.css' );
 			if ( meta_box_find_field_type( 'date', $this->fields ) || meta_box_find_field_type( 'slider', $this->fields ) )
-				$deps[] = 'jqueryui';
+				wp_enqueue_style( 'jqueryui', CUSTOM_METABOXES_DIR . '/css/jqueryui.css');
 			if ( meta_box_find_field_type( 'color', $this->fields ) )
-				$deps[] = 'farbtastic';
-			wp_enqueue_style( 'meta_box', CUSTOM_METABOXES_DIR . '/css/meta_box.css', $deps );
+				wp_enqueue_style( 'farbtastic');
+				
+				wp_enqueue_style( 'meta_box', CUSTOM_METABOXES_DIR . '/css/meta_box.css' );
 		}
 	}
 	
