@@ -340,24 +340,24 @@ function meta_box_sanitize_boolean( $string ) {
  *
  * @return						a validated string
  */
-function meta_box_sanitize( $string, $function = 'sanitize_text_field' ) {
+function meta_box_sanitize( $string, $function = 'sanitize_text_field' ) {		// codex.wordpress.org/Data_Validation
 	switch ( $function ) {
 		case 'intval':
-			return intval( $string );
+			return intval( $string );						// integer
 		case 'absint':
-			return absint( $string );
+			return absint( $string );						// force positive integer
 		case 'wp_kses_post':
-			return wp_kses_post( $string );
+			return wp_kses_post( $string );					// allow same HTML tags as the specified WP post type
 		case 'wp_kses_data':
-			return wp_kses_data( $string );
+			return wp_kses_data( $string );					// allow HTML, using this custom whitelist
 		case 'esc_url_raw':
-			return esc_url_raw( $string );
+			return esc_url_raw( $string );					// safe to DB; may need filtering before safe on-page
 		case 'is_email':
-			return is_email( $string );
+			return is_email( $string );						// email
 		case 'sanitize_title':
-			return sanitize_title( $string );
+			return sanitize_title( $string );				// same rules that WP uses to create a permalink/slug
 		case 'sanitize_boolean':
-			return meta_box_sanitize_boolean( $string );
+			return meta_box_sanitize_boolean( $string );	// slightly different version from the native WP
 		case 'sanitize_text_field':
 		default:
 			return sanitize_text_field( $string );
