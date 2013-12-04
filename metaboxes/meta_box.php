@@ -508,7 +508,7 @@ class Custom_Add_Meta_Box {
 		if( ! is_array( $this->page ) )
 			$this->page = array( $this->page );
 		
-		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
+		// add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
 		add_action( 'admin_head',  array( $this, 'admin_head' ) );
 		add_action( 'add_meta_boxes', array( $this, 'add_box' ) );
 		add_action( 'save_post',  array( $this, 'save_box' ));
