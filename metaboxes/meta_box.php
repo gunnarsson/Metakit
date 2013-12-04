@@ -17,15 +17,17 @@ function custom_meta_box_field( $field, $meta = null, $repeatable = null ) {
 		return;
 	
 	// get field data
-	$type = isset( $field['type'] ) ? $field['type'] : null;
-	$label = isset( $field['label'] ) ? $field['label'] : null;
-	$desc = isset( $field['desc'] ) ? '<span class="description">' . $field['desc'] . '</span>' : null;
-	$place = isset( $field['place'] ) ? $field['place'] : null;
-	$size = isset( $field['size'] ) ? $field['size'] : null;
-	$post_type = isset( $field['post_type'] ) ? $field['post_type'] : null;
-	$options = isset( $field['options'] ) ? $field['options'] : null;
-	$settings = isset( $field['settings'] ) ? $field['settings'] : null;
+	$type   = isset( $field['type'] ) ? $field['type'] : null;
+	$label  = isset( $field['label'] ) ? $field['label'] : null;
+	$desc   = isset( $field['desc'] ) ? '<span class="description">' . $field['desc'] . '</span>' : null;
+	$place  = isset( $field['place'] ) ? $field['place'] : null;
+	$size   = isset( $field['size'] ) ? $field['size'] : null;
+	$post_type  = isset( $field['post_type'] ) ? $field['post_type'] : null;
+	$options    = isset( $field['options'] ) ? $field['options'] : null;
+	$settings   = isset( $field['settings'] ) ? $field['settings'] : null;
 	$repeatable_fields = isset( $field['repeatable_fields'] ) ? $field['repeatable_fields'] : null;
+	$std  = isset( $field['std'] ) ? $field['std'] : null;
+	$meta = $meta ?: $std;
 	
 	// the id and name for each field
 	$id = $name = isset( $field['id'] ) ? $field['id'] : null;
