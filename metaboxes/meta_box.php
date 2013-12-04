@@ -1,7 +1,7 @@
 <?php
 
 // metaboxes directory constant
-define( 'CUSTOM_METABOXES_DIR', get_template_directory_uri() . '/lib/metaboxes' );
+define( 'CUSTOM_METABOXES_DIR', plugin_dir_url(__FILE__) );
 
 /**
  * recives data about a form field and spits out the proper html
@@ -242,7 +242,7 @@ function custom_meta_box_field( $field, $meta = null, $repeatable = null ) {
 				<thead>
 					<tr>
 						<th><span class="sort_label"></span></th>
-						<th>'.__(Fields).'</th>
+						<th>'.__('Fields').'</th>
 						<th><a class="meta_box_repeatable_add" href="#"></a></th>
 					</tr>
 				</thead>
@@ -272,7 +272,7 @@ function custom_meta_box_field( $field, $meta = null, $repeatable = null ) {
 				<tfoot>
 					<tr>
 						<th><span class="sort_label"></span></th>
-						<th>'.__(Fields).'</th>
+						<th>'.__('Fields').'</th>
 						<th><a class="meta_box_repeatable_add" href="#"></a></th>
 					</tr>
 				</tfoot>';
@@ -280,9 +280,7 @@ function custom_meta_box_field( $field, $meta = null, $repeatable = null ) {
 				' . $desc;
 		break;
 	} //end switch
-		
 }
-
 
 /**
  * Finds any item in any level of an array
@@ -419,8 +417,7 @@ function meta_box_array_map_r( $func, $meta, $sanitizer ) {
  * @return	string				JS date format (useful for datepicker)
  *
 */
-function date_format_php_to_js( $php_format )
-{
+function date_format_php_to_js( $php_format ) {
     $PHP_matching_JS = array(
             // Day
             'd' => 'dd',
@@ -485,7 +482,6 @@ function date_format_php_to_js( $php_format )
     return $js_format;
 }
 
-
 /**
  * takes in a few peices of data and creates a custom meta box
  *
@@ -533,11 +529,11 @@ class Custom_Add_Meta_Box {
 			if ( in_array( true, array(
 				meta_box_find_field_type( 'chosen', $this->fields ),
 				meta_box_find_field_type( 'post_chosen', $this->fields )
-			) ) ) {
-				wp_register_script( 'chosen', CUSTOM_METABOXES_DIR . '/js/chosen.js', array( 'jquery' ) );
-				$deps[] = 'chosen';
-				wp_enqueue_style( 'chosen', CUSTOM_METABOXES_DIR . '/css/chosen.css' );
-			}
+				) ) ) {
+					wp_register_script( 'chosen', CUSTOM_METABOXES_DIR . '/js/chosen.js', array( 'jquery' ) );
+					$deps[] = 'chosen';
+					wp_enqueue_style( 'chosen', CUSTOM_METABOXES_DIR . '/css/chosen.css' );
+				}
 			if ( in_array( true, array(
 				meta_box_find_field_type( 'date', $this->fields ),
 				meta_box_find_field_type( 'slider', $this->fields ),
@@ -547,24 +543,21 @@ class Custom_Add_Meta_Box {
 				meta_box_find_repeatable( 'repeatable', $this->fields ),
 				meta_box_find_field_type( 'image', $this->fields ),
 				meta_box_find_field_type( 'file', $this->fields )
-			) ) )
-			
-				wp_enqueue_media();
-				wp_enqueue_script( 'meta_box', CUSTOM_METABOXES_DIR . '/js/scripts.js', $deps );
-				
+				) ) )
+					wp_enqueue_media();
+			wp_enqueue_script( 'meta_box', CUSTOM_METABOXES_DIR . '/js/scripts.js', $deps );
 			if ( in_array( true, array(
 				meta_box_find_field_type( 'date', $this->fields ),
-			) ) )
-				wp_enqueue_script('jquery-ui-datepicker');
-				
-				
+				) ) )
+					wp_enqueue_script('jquery-ui-datepicker');
+
 			// css
 			if ( meta_box_find_field_type( 'date', $this->fields ) || meta_box_find_field_type( 'slider', $this->fields ) )
 				wp_enqueue_style( 'jqueryui', CUSTOM_METABOXES_DIR . '/css/jqueryui.css');
 			if ( meta_box_find_field_type( 'color', $this->fields ) )
 				wp_enqueue_style( 'farbtastic');
 				
-				wp_enqueue_style( 'meta_box', CUSTOM_METABOXES_DIR . '/css/meta_box.css' );
+			wp_enqueue_style( 'meta_box', CUSTOM_METABOXES_DIR . '/css/meta_box.css' );
 		}
 	}
 	
