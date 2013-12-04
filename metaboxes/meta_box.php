@@ -85,7 +85,7 @@ function custom_meta_box_field( $field, $meta = null, $repeatable = null ) {
 		case 'checkbox_group':
 			echo '<ul class="meta_box_items">';
 			foreach ( $options as $option )
-				echo '<li><input type="checkbox" value="' . $option['value'] . '" name="' . esc_attr( $name ) . '[]" id="' . esc_attr( $id ) . '-' . $option['value'] . '"' , is_array( $meta ) && in_array( $option['value'], $meta ) ? ' checked="checked"' : '' , ' /> 
+				echo '<li><input type="checkbox" value="' . $option['value'] . '" name="' . esc_attr( $name ) . '[]" id="' . esc_attr( $id ) . '-' . $option['value'] . '"' , is_array( $meta ) && in_array( $option['value'], $meta ) ? ' checked="checked"' : '' , ' />
 						<label for="' . esc_attr( $id ) . '-' . $option['value'] . '">' . $option['label'] . '</label></li>';
 			echo '</ul>' . $desc;
 		break;
@@ -120,7 +120,7 @@ function custom_meta_box_field( $field, $meta = null, $repeatable = null ) {
 		case 'post_checkboxes':
 			$posts = get_posts( array( 'post_type' => $post_type, 'posts_per_page' => -1 ) );
 			echo '<ul class="meta_box_items">';
-			foreach ( $posts as $item ) 
+			foreach ( $posts as $item )
 				echo '<li><input type="checkbox" value="' . $item->ID . '" name="' . esc_attr( $name ) . '[]" id="' . esc_attr( $id ) . '-' . $item->ID . '"' , is_array( $meta ) && in_array( $item->ID, $meta ) ? ' checked="checked"' : '' , ' />
 						<label for="' . esc_attr( $id ) . '-' . $item->ID . '">' . $item->post_title . '</label></li>';
 			$post_type_object = get_post_type_object( $post_type );
@@ -137,13 +137,13 @@ function custom_meta_box_field( $field, $meta = null, $repeatable = null ) {
 						if ( is_array( $meta ) ) {
 							$items = explode( ',', $meta[$area['id']] );
 							foreach ( $items as $item ) {
-								$output = $display == 'thumbnail' ? get_the_post_thumbnail( $item, array( 204, 30 ) ) : get_the_title( $item ); 
+								$output = $display == 'thumbnail' ? get_the_post_thumbnail( $item, array( 204, 30 ) ) : get_the_title( $item );
 								echo '<li id="' . $item . '">' . $output . '</li>';
 							}
 						}
 				echo '</ul>
-					<input type="hidden" name="' . esc_attr( $name ) . '[' . $area['id'] . ']" 
-					class="store-area-' . $area['id'] . '" 
+					<input type="hidden" name="' . esc_attr( $name ) . '[' . $area['id'] . ']"
+					class="store-area-' . $area['id'] . '"
 					value="' , $meta ? $meta[$area['id']] : '' , '" />';
 			}
 			echo '</div>';
@@ -157,7 +157,7 @@ function custom_meta_box_field( $field, $meta = null, $repeatable = null ) {
 			echo '<ul class="post_drop_sort_source sort_list">
 					<li class="post_drop_sort_area_name">Available ' . $label . '</li>';
 			foreach ( $posts as $item ) {
-				$output = $display == 'thumbnail' ? get_the_post_thumbnail( $item->ID, array( 204, 30 ) ) : get_the_title( $item->ID ); 
+				$output = $display == 'thumbnail' ? get_the_post_thumbnail( $item->ID, array( 204, 30 ) ) : get_the_title( $item->ID );
 				echo '<li id="' . $item->ID . '">' . $output . '</li>';
 			}
 			echo '</ul>';
@@ -172,7 +172,7 @@ function custom_meta_box_field( $field, $meta = null, $repeatable = null ) {
 			$selected = $post_terms ? $taxonomy->hierarchical ? $post_terms[0]->term_id : $post_terms[0]->slug : null;
 			foreach ( $terms as $term ) {
 				$term_value = $taxonomy->hierarchical ? $term->term_id : $term->slug;
-				echo '<option value="' . $term_value . '"' . selected( $selected, $term_value, false ) . '>' . $term->name . '</option>'; 
+				echo '<option value="' . $term_value . '"' . selected( $selected, $term_value, false ) . '>' . $term->name . '</option>';
 			}
 			echo '</select> &nbsp;<span class="description"><a href="'.get_bloginfo( 'url' ) . '/wp-admin/edit-tags.php?taxonomy=' . $id . '">Manage ' . $taxonomy->label . '</a></span>
 				<br />' . $desc;
@@ -209,12 +209,12 @@ function custom_meta_box_field( $field, $meta = null, $repeatable = null ) {
 		break;
 		// image
 		case 'image':
-			$image = CUSTOM_METABOXES_DIR . '/images/image.png';	
+			$image = CUSTOM_METABOXES_DIR . '/images/image.png';
 			echo '<div class="meta_box_image"><span class="meta_box_default_image" style="display:none">' . $image . '</span>';
 			if ( $meta ) {
 				$image = wp_get_attachment_image_src( intval( $meta ), 'medium' );
 				$image = $image[0];
-			}				
+			}
 			echo	'<input name="' . esc_attr( $name ) . '" type="hidden" class="meta_box_upload_image" value="' . intval( $meta ) . '" />
 						<img src="' . esc_attr( $image ) . '" class="meta_box_preview_image" alt="" />
 							<a href="#" class="meta_box_upload_image_button button" rel="' . get_the_ID() . '">Choose Image</a>
@@ -222,7 +222,7 @@ function custom_meta_box_field( $field, $meta = null, $repeatable = null ) {
 							<br clear="all" />' . $desc;
 		break;
 		// file
-		case 'file':		
+		case 'file':
 			$iconClass = 'meta_box_file';
 			if ( $meta ) $iconClass .= ' checked';
 			echo	'<div class="meta_box_file_stuff"><input name="' . esc_attr( $name ) . '" type="hidden" class="meta_box_upload_file" value="' . esc_url( $meta ) . '" />
@@ -300,10 +300,10 @@ function meta_box_find_field_type( $needle, $haystack ) {
 /**
  * Find repeatable
  *
- * This function does almost the same exact thing that the above function 
- * does, except we're exclusively looking for the repeatable field. The 
- * reason is that we need a way to look for other fields nested within a 
- * repeatable, but also need a way to stop at repeatable being true. 
+ * This function does almost the same exact thing that the above function
+ * does, except we're exclusively looking for the repeatable field. The
+ * reason is that we need a way to look for other fields nested within a
+ * repeatable, but also need a way to stop at repeatable being true.
  * Hopefully I'll find a better way to do this later.
  *
  * @param	string	$needle 	field type to look for
@@ -321,7 +321,7 @@ function meta_box_find_repeatable( $needle = 'repeatable', $haystack ) {
 /**
  * sanitize boolean inputs
  */
-function meta_box_santitize_boolean( $string ) {
+function meta_box_sanitize_boolean( $string ) {
 	if ( ! isset( $string ) || $string != 1 || $string != true )
 		return false;
 	else
@@ -352,8 +352,8 @@ function meta_box_sanitize( $string, $function = 'sanitize_text_field' ) {
 			return is_email( $string );
 		case 'sanitize_title':
 			return sanitize_title( $string );
-		case 'santitize_boolean':
-			return santitize_boolean( $string );
+		case 'sanitize_boolean':
+			return meta_box_sanitize_boolean( $string );
 		case 'sanitize_text_field':
 		default:
 			return sanitize_text_field( $string );
@@ -385,7 +385,7 @@ function meta_box_array_map_r( $func, $meta, $sanitizer ) {
 			break;
 		}
 		/**
-		 * the sanitizer will have all of the fields, but the item may only 
+		 * the sanitizer will have all of the fields, but the item may only
 		 * have valeus for a few, remove the ones we don't have from the santizer
 		 */
 		$keys = array_keys( $array );
@@ -415,7 +415,7 @@ function meta_box_array_map_r( $func, $meta, $sanitizer ) {
  *
 */
 
-function date_format_php_to_js( $php_format ) 
+function date_format_php_to_js( $php_format )
 {
     $PHP_matching_JS = array(
             // Day
@@ -534,8 +534,8 @@ class Custom_Add_Meta_Box {
 				$deps[] = 'chosen';
 				wp_enqueue_style( 'chosen', CUSTOM_METABOXES_DIR . '/css/chosen.css' );
 			}
-			if ( in_array( true, array( 
-				meta_box_find_field_type( 'date', $this->fields ), 
+			if ( in_array( true, array(
+				meta_box_find_field_type( 'date', $this->fields ),
 				meta_box_find_field_type( 'slider', $this->fields ),
 				meta_box_find_field_type( 'color', $this->fields ),
 				meta_box_find_field_type( 'chosen', $this->fields ),
@@ -548,8 +548,8 @@ class Custom_Add_Meta_Box {
 				wp_enqueue_media();
 				wp_enqueue_script( 'meta_box', CUSTOM_METABOXES_DIR . '/js/scripts.js', $deps );
 				
-			if ( in_array( true, array( 
-				meta_box_find_field_type( 'date', $this->fields ), 
+			if ( in_array( true, array(
+				meta_box_find_field_type( 'date', $this->fields ),
 			) ) )
 				wp_enqueue_script('jquery-ui-datepicker');
 				
@@ -660,7 +660,7 @@ class Custom_Add_Meta_Box {
 		// verify nonce
 		if ( ! isset( $_POST['custom_meta_box_nonce_field'] ) )
 			return $post_id;
-		if ( ! ( in_array( $post_type, $this->page ) || wp_verify_nonce( $_POST['custom_meta_box_nonce_field'],  'custom_meta_box_nonce_action' ) ) ) 
+		if ( ! ( in_array( $post_type, $this->page ) || wp_verify_nonce( $_POST['custom_meta_box_nonce_field'],  'custom_meta_box_nonce_action' ) ) )
 			return $post_id;
 		// check autosave
 		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE )
@@ -697,9 +697,9 @@ class Custom_Add_Meta_Box {
 						$new = meta_box_array_map_r( 'meta_box_sanitize', $new, $sanitizer );
 					else
 						$new = meta_box_sanitize( $new, $sanitizer );
-						if( $field['type'] == 'date') {	
+						if( $field['type'] == 'date') {
 							$new = strtotime($new);
-						}	
+						}
 					update_post_meta( $post_id, $field['id'], $new );
 				}
 			}
