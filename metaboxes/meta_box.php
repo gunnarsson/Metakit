@@ -50,6 +50,10 @@ function custom_meta_box_field( $field, $meta = null, $repeatable = null ) {
 			echo '<input type="' . $type . '" name="' . esc_attr( $name ) . '" id="' . esc_attr( $id ) . '" value="' . intval( $meta ) . '" class="regular-text" size="30" />
 					<br />' . $desc;
 		break;
+		case 'money':
+			echo '<input type="' . $type . '" name="' . esc_attr( $name ) . '" id="' . esc_attr( $id ) . '" value="' . number_format( floatval( $meta ), 2 ) . '" class="regular-text" size="30" />
+					<br />' . $desc;
+		break;
 		// textarea
 		case 'textarea':
 			echo '<textarea name="' . esc_attr( $name ) . '" id="' . esc_attr( $id ) . '" cols="60" rows="4">' . esc_textarea( $meta ) . '</textarea>
@@ -407,6 +411,7 @@ function meta_box_array_map_r( $func, $meta, $sanitizer ) {
 	}
 	return $newMeta;
 }
+
 /**
  * Converts a php date format to js
  *
@@ -414,7 +419,6 @@ function meta_box_array_map_r( $func, $meta, $sanitizer ) {
  * @return	string				JS date format (useful for datepicker)
  *
 */
-
 function date_format_php_to_js( $php_format )
 {
     $PHP_matching_JS = array(
