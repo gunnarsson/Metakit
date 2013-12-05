@@ -25,6 +25,7 @@ function custom_meta_box_field( $field, $meta = null, $repeatable = null ) {
 	$post_type  = isset( $field['post_type'] ) ? $field['post_type'] : null;
 	$options    = isset( $field['options'] ) ? $field['options'] : null;
 	$settings   = isset( $field['settings'] ) ? $field['settings'] : null;
+	$section    = isset( $field['section'] ) ? $field['section'] : null;
 	$repeatable_fields = isset( $field['repeatable_fields'] ) ? $field['repeatable_fields'] : null;
 	$std  = isset( $field['std'] ) ? $field['std'] : null;
 	$meta = $meta ?: $std;
@@ -113,8 +114,7 @@ function custom_meta_box_field( $field, $meta = null, $repeatable = null ) {
 		// post_select, post_chosen
 		case 'post_select':
 		case 'post_list':
-		case 'post_chosen':
-			echo '<select data-placeholder="Select One" name="' . esc_attr( $name ) . '[]" id="' . esc_attr( $id ) . '"' , $type == 'post_chosen' ? ' class="chosen"' : '' , isset( $multiple ) && $multiple == true ? ' multiple="multiple"' : '' , '>
+		case 'post_chosen': echo '<select data-placeholder="Select One" name="' . esc_attr( $name ) . '[]" id="' . esc_attr( $id ) . '"' , $type == 'post_chosen' ? ' class="chosen"' : '' , isset( $multiple ) && $multiple == true ? ' multiple="multiple"' : '' , '>
 					<option value=""></option>'; // Select One
 			$posts = get_posts( array( 'post_type' => $post_type, 'posts_per_page' => -1, 'orderby' => 'name', 'order' => 'ASC' ) );
 			foreach ( $posts as $item )
@@ -636,7 +636,7 @@ class Custom_Add_Meta_Box {
 					</tr>';
 			}
 			else {
-				echo '<tr>
+				echo '<tr class="'.$field['section'].'">
 						<th style="width:20%"><label for="' . $field['id'] . '">' . $field['label'] . '</label></th>
 						<td>';
 						
