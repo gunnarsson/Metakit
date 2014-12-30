@@ -6,15 +6,15 @@ define('CUSTOM_METABOXES_DIR', get_stylesheet_directory_uri() . '/lib/metakit/me
 /**
  * recives data about a form field and spits out the proper html
  *
- * @param	array					$field			array with various bits of information about the field
- * @param	string|int|bool|array	$meta			the saved data for this field
- * @param	array					$repeatable		if is this for a repeatable field, contains parant id and the current integar
- *
- * @return	string									html for the field
+ * @param array $field array with various bits of information about the field
+ * @param string|int|bool|array $meta the saved data for this field
+ * @param array $repeatable if is this for a repeatable field, contains parent id and the current integer
+ * @return string html for the field
  */
 function custom_meta_box_field($field, $meta = null, $repeatable = null) {
-    if (!( $field || is_array($field) ))
+    if (!($field || is_array($field))) {
         return;
+    }
 
     // get field data
     $type = isset($field['type']) ? $field['type'] : null;
@@ -22,6 +22,7 @@ function custom_meta_box_field($field, $meta = null, $repeatable = null) {
     $desc = isset($field['desc']) ? '<span class="description">' . $field['desc'] . '</span>' : null;
     $place = isset($field['place']) ? $field['place'] : null;
     $size = isset($field['size']) ? $field['size'] : null;
+    $step = isset($field['step']) ? $field['step'] : null;
     $post_type = isset($field['post_type']) ? $field['post_type'] : null;
     $options = isset($field['options']) ? $field['options'] : null;
     $settings = isset($field['settings']) ? $field['settings'] : null;
@@ -39,25 +40,23 @@ function custom_meta_box_field($field, $meta = null, $repeatable = null) {
         case 'tel':
         case 'email':
         default:
-            echo '<input type="' . $type . '" name="' . esc_attr($name) . '" id="' . esc_attr($id) . '" value="' . esc_attr($meta) . '" class="regular-text" size="30" />
-					<br />' . $desc;
+            echo '<input type="' . $type . '" name="' . esc_attr($name) . '" id="' . esc_attr($id) . '" value="' . esc_attr($meta) . '" class="regular-text" size="30" /><br />' . $desc;
             break;
         case 'url':
-            echo '<input type="' . $type . '" name="' . esc_attr($name) . '" id="' . esc_attr($id) . '" value="' . esc_url($meta) . '" class="regular-text" size="30" />
-					<br />' . $desc;
+            echo '<input type="' . $type . '" name="' . esc_attr($name) . '" id="' . esc_attr($id) . '" value="' . esc_url($meta) . '" class="regular-text" size="30" /><br />' . $desc;
             break;
         case 'number':
-            echo '<input type="' . $type . '" name="' . esc_attr($name) . '" id="' . esc_attr($id) . '" value="' . intval($meta) . '" class="regular-text" size="30" />
-					<br />' . $desc;
+            echo '<input type="' . $type . '" name="' . esc_attr($name) . '" id="' . esc_attr($id) . '" value="' . intval($meta) . '" class="regular-text" size="30" /><br />' . $desc;
+            break;
+        case 'float':
+            echo '<input type="number" name="' . esc_attr($name) . '" id="' . esc_attr($id) . '" value="' . floatval($meta) . '" step="' . esc_attr($step) . '" class="regular-text" size="30" /><br />' . $desc;
             break;
         case 'money':
-            echo '<input type="' . $type . '" name="' . esc_attr($name) . '" id="' . esc_attr($id) . '" value="' . number_format(floatval($meta), 2) . '" class="regular-text" size="30" />
-					<br />' . $desc;
+            echo '<input type="' . $type . '" name="' . esc_attr($name) . '" id="' . esc_attr($id) . '" value="' . number_format(floatval($meta), 2) . '" class="regular-text" size="30" /><br />' . $desc;
             break;
         // textarea
         case 'textarea':
-            echo '<textarea name="' . esc_attr($name) . '" id="' . esc_attr($id) . '" cols="60" rows="4">' . esc_textarea($meta) . '</textarea>
-					<br />' . $desc;
+            echo '<textarea name="' . esc_attr($name) . '" id="' . esc_attr($id) . '" cols="60" rows="4">' . esc_textarea($meta) . '</textarea><br />' . $desc;
             break;
         // editor
         case 'editor':
@@ -65,14 +64,12 @@ function custom_meta_box_field($field, $meta = null, $repeatable = null) {
             break;
         // checkbox
         case 'checkbox':
-            echo '<input type="checkbox" name="' . esc_attr($name) . '" id="' . esc_attr($id) . '" ' . checked($meta, true, false) . ' value="1" />
-					<label for="' . esc_attr($id) . '">' . $desc . '</label>';
+            echo '<input type="checkbox" name="' . esc_attr($name) . '" id="' . esc_attr($id) . '" ' . checked($meta, true, false) . ' value="1" /><label for="' . esc_attr($id) . '">' . $desc . '</label>';
             break;
         // select, chosen
         case 'select':
         case 'chosen':
-            echo '<select name="' . esc_attr($name) . '" id="' . esc_attr($id) . '"', $type == 'chosen' ? ' class="chosen"' : '', isset($multiple) && $multiple == true ? ' multiple="multiple"' : '', '>
-					<option value="">Select One</option>'; // Select One
+            echo '<select name="' . esc_attr($name) . '" id="' . esc_attr($id) . '"', $type == 'chosen' ? ' class="chosen"' : '', isset($multiple) && $multiple == true ? ' multiple="multiple"' : '', '><option value="">Select One</option>'; // Select One
             foreach ($options as $option)
                 echo '<option' . selected($meta, $option['value'], false) . ' value="' . $option['value'] . '">' . $option['label'] . '</option>';
             echo '</select><br />' . $desc;
@@ -81,23 +78,20 @@ function custom_meta_box_field($field, $meta = null, $repeatable = null) {
         case 'radio':
             echo '<ul class="meta_box_items">';
             foreach ($options as $option)
-                echo '<li><input type="radio" name="' . esc_attr($name) . '" id="' . esc_attr($id) . '-' . $option['value'] . '" value="' . $option['value'] . '" ' . checked($meta, $option['value'], false) . ' />
-						<label for="' . esc_attr($id) . '-' . $option['value'] . '">' . $option['label'] . '</label></li>';
+                echo '<li><input type="radio" name="' . esc_attr($name) . '" id="' . esc_attr($id) . '-' . $option['value'] . '" value="' . $option['value'] . '" ' . checked($meta, $option['value'], false) . ' /><label for="' . esc_attr($id) . '-' . $option['value'] . '">' . $option['label'] . '</label></li>';
             echo '</ul>' . $desc;
             break;
         // checkbox_group
         case 'checkbox_group':
             echo '<ul class="meta_box_items">';
             foreach ($options as $option)
-                echo '<li><input type="checkbox" value="' . $option['value'] . '" name="' . esc_attr($name) . '[]" id="' . esc_attr($id) . '-' . $option['value'] . '"', is_array($meta) && in_array($option['value'], $meta) ? ' checked="checked"' : '', ' />
-						<label for="' . esc_attr($id) . '-' . $option['value'] . '">' . $option['label'] . '</label></li>';
+                echo '<li><input type="checkbox" value="' . $option['value'] . '" name="' . esc_attr($name) . '[]" id="' . esc_attr($id) . '-' . $option['value'] . '"', is_array($meta) && in_array($option['value'], $meta) ? ' checked="checked"' : '', ' /><label for="' . esc_attr($id) . '-' . $option['value'] . '">' . $option['label'] . '</label></li>';
             echo '</ul>' . $desc;
             break;
         // color
         case 'color':
             $meta = $meta ? $meta : '#';
-            echo '<input type="text" name="' . esc_attr($name) . '" id="' . esc_attr($id) . '" value="' . $meta . '" size="10" />
-				<br />' . $desc;
+            echo '<input type="text" name="' . esc_attr($name) . '" id="' . esc_attr($id) . '" value="' . $meta . '" size="10" /><br />' . $desc;
             echo '<div id="colorpicker-' . esc_attr($id) . '"></div>
 				<script type="text/javascript">
 				jQuery(function(jQuery) {
@@ -112,9 +106,8 @@ function custom_meta_box_field($field, $meta = null, $repeatable = null) {
         case 'post_select':
         case 'post_list':
         case 'post_chosen':
-            echo '<select data-placeholder="Select One" name="' . esc_attr($name) . '[]" id="' . esc_attr($id) . '"', $type == 'post_chosen' ? ' class="chosen"' : '', isset($multiple) && $multiple == true ? ' multiple="multiple"' : '', '>
-					<option value=""></option>'; // Select One
-            $posts = get_posts(array('post_type' => $post_type, 'posts_per_page' => -1, 'orderby' => 'name', 'order' => 'ASC'));
+            echo '<select data-placeholder="Select One" name="' . esc_attr($name) . '[]" id="' . esc_attr($id) . '"', $type == 'post_chosen' ? ' class="chosen"' : '', isset($multiple) && $multiple == true ? ' multiple="multiple"' : '', '><option value=""></option>'; // Select One
+            $posts = get_posts(array('post_type' => $post_type, 'posts_per_page' => -1, 'orderby' => 'post_title', 'order' => 'ASC'));
             foreach ($posts as $item)
                 echo '<option value="' . $item->ID . '"' . selected(is_array($meta) && in_array($item->ID, $meta), true, false) . '>' . $item->post_title . '</option>';
             $post_type_object = get_post_type_object($post_type);
@@ -125,8 +118,7 @@ function custom_meta_box_field($field, $meta = null, $repeatable = null) {
             $posts = get_posts(array('post_type' => $post_type, 'posts_per_page' => -1));
             echo '<ul class="meta_box_items">';
             foreach ($posts as $item)
-                echo '<li><input type="checkbox" value="' . $item->ID . '" name="' . esc_attr($name) . '[]" id="' . esc_attr($id) . '-' . $item->ID . '"', is_array($meta) && in_array($item->ID, $meta) ? ' checked="checked"' : '', ' />
-						<label for="' . esc_attr($id) . '-' . $item->ID . '">' . $item->post_title . '</label></li>';
+                echo '<li><input type="checkbox" value="' . $item->ID . '" name="' . esc_attr($name) . '[]" id="' . esc_attr($id) . '-' . $item->ID . '"', is_array($meta) && in_array($item->ID, $meta) ? ' checked="checked"' : '', ' /><label for="' . esc_attr($id) . '-' . $item->ID . '">' . $item->post_title . '</label></li>';
             $post_type_object = get_post_type_object($post_type);
             echo '</ul> ' . $desc, ' &nbsp;<span class="description"><a href="' . admin_url('edit.php?post_type=' . $post_type . '">Manage ' . $post_type_object->label) . '</a></span>';
             break;
@@ -136,8 +128,7 @@ function custom_meta_box_field($field, $meta = null, $repeatable = null) {
             $post_type_object = get_post_type_object($post_type);
             echo '<p>' . $desc . ' &nbsp;<span class="description"><a href="' . admin_url('edit.php?post_type=' . $post_type . '">Manage ' . $post_type_object->label) . '</a></span></p><div class="post_drop_sort_areas">';
             foreach ($areas as $area) {
-                echo '<ul id="area-' . $area['id'] . '" class="sort_list">
-						<li class="post_drop_sort_area_name">' . $area['label'] . '</li>';
+                echo '<ul id="area-' . $area['id'] . '" class="sort_list"><li class="post_drop_sort_area_name">' . $area['label'] . '</li>';
                 if (is_array($meta)) {
                     $items = explode(',', $meta[$area['id']]);
                     foreach ($items as $item) {
@@ -158,8 +149,7 @@ function custom_meta_box_field($field, $meta = null, $repeatable = null) {
                 $exclude = explode(',', $exclude); // put all the ID's back into a single array
             }
             $posts = get_posts(array('post_type' => $post_type, 'posts_per_page' => -1, 'post__not_in' => $exclude));
-            echo '<ul class="post_drop_sort_source sort_list">
-					<li class="post_drop_sort_area_name">Available ' . $label . '</li>';
+            echo '<ul class="post_drop_sort_source sort_list"><li class="post_drop_sort_area_name">Available ' . $label . '</li>';
             foreach ($posts as $item) {
                 $output = $display == 'thumbnail' ? get_the_post_thumbnail($item->ID, array(204, 30)) : get_the_title($item->ID);
                 echo '<li id="' . $item->ID . '">' . $output . '</li>';
@@ -168,8 +158,7 @@ function custom_meta_box_field($field, $meta = null, $repeatable = null) {
             break;
         // tax_select
         case 'tax_select':
-            echo '<select name="' . esc_attr($name) . '" id="' . esc_attr($id) . '">
-					<option value="">Select One</option>'; // Select One
+            echo '<select name="' . esc_attr($name) . '" id="' . esc_attr($id) . '"><option value="">Select One</option>'; // Select One
             $terms = get_terms($id, 'get=all');
             $post_terms = wp_get_object_terms(get_the_ID(), $id);
             $taxonomy = get_taxonomy($id);
@@ -178,8 +167,7 @@ function custom_meta_box_field($field, $meta = null, $repeatable = null) {
                 $term_value = $taxonomy->hierarchical ? $term->term_id : $term->slug;
                 echo '<option value="' . $term_value . '"' . selected($selected, $term_value, false) . '>' . $term->name . '</option>';
             }
-            echo '</select> &nbsp;<span class="description"><a href="' . get_bloginfo('url') . '/wp-admin/edit-tags.php?taxonomy=' . $id . '">Manage ' . $taxonomy->label . '</a></span>
-				<br />' . $desc;
+            echo '</select> &nbsp;<span class="description"><a href="' . get_bloginfo('url') . '/wp-admin/edit-tags.php?taxonomy=' . $id . '">Manage ' . $taxonomy->label . '</a></span><br />' . $desc;
             break;
         // tax_checkboxes
         case 'tax_checkboxes':
@@ -201,15 +189,12 @@ function custom_meta_box_field($field, $meta = null, $repeatable = null) {
             } else {
                 $meta_converted = '';
             }
-            echo '<input type="text" class="datepicker" name="' . esc_attr($name) . '" id="' . esc_attr($id) . '" value="' . $meta_converted . '" size="30" />
-					<br />' . $desc;
+            echo '<input type="text" class="datepicker" name="' . esc_attr($name) . '" id="' . esc_attr($id) . '" value="' . $meta_converted . '" size="30" /><br />' . $desc;
             break;
         // slider
         case 'slider':
             $value = $meta != '' ? intval($meta) : '0';
-            echo '<div id="' . esc_attr($id) . '-slider"></div>
-					<input type="text" name="' . esc_attr($name) . '" id="' . esc_attr($id) . '" value="' . $value . '" size="5" />
-					<br />' . $desc;
+            echo '<div id="' . esc_attr($id) . '-slider"></div><input type="text" name="' . esc_attr($name) . '" id="' . esc_attr($id) . '" value="' . $value . '" size="5" /><br />' . $desc;
             break;
         // image
         case 'image':
@@ -256,11 +241,11 @@ function custom_meta_box_field($field, $meta = null, $repeatable = null) {
             }
             $meta = array_values($meta);
             foreach ($meta as $row) {
-                echo '<tr>
-						<td><span class="sort hndle"></span></td><td>';
+                echo '<tr><td><span class="sort hndle"></span></td><td>';
                 foreach ($repeatable_fields as $repeatable_field) {
-                    if (!array_key_exists($repeatable_field['id'], $meta[$i]))
+                    if (!array_key_exists($repeatable_field['id'], $meta[$i])) {
                         $meta[$i][$repeatable_field['id']] = null;
+                    }
                     echo '<label>' . $repeatable_field['label'] . '</label><p>';
                     echo custom_meta_box_field($repeatable_field, $meta[$i][$repeatable_field['id']], array($id, $i));
                     echo '</p>';
@@ -269,16 +254,12 @@ function custom_meta_box_field($field, $meta = null, $repeatable = null) {
                 $i++;
             } // end each row
             echo '</tbody>';
-            echo '
-				<tfoot>
-					<tr>
-						<th><span class="sort_label"></span></th>
-						<th>' . __(Fields) . '</th>
-						<th><a class="meta_box_repeatable_add" href="#"></a></th>
-					</tr>
-				</tfoot>';
-            echo '</table>
-				' . $desc;
+            echo '<tfoot><tr>
+		<th><span class="sort_label"></span></th>
+		<th>' . __(Fields) . '</th>
+		<th><a class="meta_box_repeatable_add" href="#"></a></th>
+                </tr></tfoot>';
+            echo '</table>' . $desc;
             break;
     } //end switch
 }
@@ -315,9 +296,12 @@ function meta_box_find_field_type($needle, $haystack) {
  * @return	bool				whether or not the type is in the provided array
  */
 function meta_box_find_repeatable($needle = 'repeatable', $haystack) {
-    foreach ($haystack as $h)
-        if (isset($h['type']) && $h['type'] == $needle)
+    foreach ($haystack as $h) {
+        if (isset($h['type']) && $h['type'] == $needle) {
             return true;
+        }
+    }
+
     return false;
 }
 
@@ -325,10 +309,11 @@ function meta_box_find_repeatable($needle = 'repeatable', $haystack) {
  * sanitize boolean inputs
  */
 function meta_box_sanitize_boolean($string) {
-    if (!isset($string) || $string != 1 || $string != true)
+    if (!isset($string) || $string != 1 || $string != true) {
         return false;
-    else
-        return true;
+    }
+
+    return true;
 }
 
 /**
@@ -343,6 +328,8 @@ function meta_box_sanitize($string, $function = 'sanitize_text_field') {  // cod
     switch ($function) {
         case 'intval':
             return intval($string);      // integer
+        case 'float':
+            return floatval(str_replace(',', '.', $string));    // Float value
         case 'absint':
             return absint($string);      // force positive integer
         case 'wp_kses_post':
