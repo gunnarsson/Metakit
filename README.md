@@ -1,7 +1,7 @@
 Metakit - Reusable Custom WordPress Meta Boxes
 ====================================
 
-Metakit is a fork of a project by: [tammyhart](http://github.com/tammyhart)
+Metakit is a fork of a project by: [superjerms](https://github.com/superjerms), heavily based on work by [tammyhart](http://github.com/tammyhart)
 
 
 Latest Updates
