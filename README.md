@@ -13,7 +13,7 @@ Latest Updates
 
 ### Fields Included
 
-* Text Input (types: text,tel, email, url, number)
+* Text Input (types: text,tel, email, url, number, float)
 * Textarea
 * WYSIWYG Editor
 * Single checkbox
