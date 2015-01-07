@@ -167,7 +167,7 @@ function custom_meta_box_field($field, $meta = null, $repeatable = null) {
                 $term_value = $taxonomy->hierarchical ? $term->term_id : $term->slug;
                 echo '<option value="' . $term_value . '"' . selected($selected, $term_value, false) . '>' . $term->name . '</option>';
             }
-            echo '</select> &nbsp;<span class="description"><a href="' . get_bloginfo('url') . '/wp-admin/edit-tags.php?taxonomy=' . $id . '">Manage ' . $taxonomy->label . '</a></span><br />' . $desc;
+            echo '</select> &nbsp;<span class="description"><a href="' . get_bloginfo('url') . '/wp-admin/edit-tags.php?taxonomy=' . $id . '">' . $taxonomy->label . '</a></span><br />' . $desc;
             break;
         // tax_checkboxes
         case 'tax_checkboxes':
