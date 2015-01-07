@@ -19,7 +19,8 @@ function custom_meta_box_field($field, $meta = null, $repeatable = null) {
     // get field data
     $type = isset($field['type']) ? $field['type'] : null;
     $label = isset($field['label']) ? $field['label'] : null;
-    $desc = isset($field['desc']) ? '<span class="description">' . $field['desc'] . '</span>' : null;
+    $raw_desc = isset($field['desc']) ? $field['desc'] : null;
+    $desc = $raw_desc ? '<span class="description">' . $raw_desc . '</span>' : null;
     $place = isset($field['place']) ? $field['place'] : null;
     $size = isset($field['size']) ? $field['size'] : null;
     $step = isset($field['step']) ? $field['step'] : null;
@@ -67,7 +68,7 @@ function custom_meta_box_field($field, $meta = null, $repeatable = null) {
             break;
         // checkbox
         case 'checkbox':
-            echo '<input type="checkbox" name="' . esc_attr($name) . '" id="' . esc_attr($id) . '" ' . checked($meta, true, false) . ' value="1" /><label for="' . esc_attr($id) . '">' . $desc . '</label>';
+            echo '<input type="checkbox" name="' . esc_attr($name) . '" id="' . esc_attr($id) . '" ' . checked($meta, true, false) . ' value="1" /><label for="' . esc_attr($id) . '">' . $raw_desc . '</label>';
             break;
         // select, chosen
         case 'select':
