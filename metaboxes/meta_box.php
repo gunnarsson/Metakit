@@ -34,6 +34,9 @@ function custom_meta_box_field($field, $meta = null, $repeatable = null) {
         $name = $repeatable[0] . '[' . $repeatable[1] . '][' . $id . ']';
         $id = $repeatable[0] . '_' . $repeatable[1] . '_' . $id;
     }
+
+    $taxonomy_name = isset($field['taxonomy']) ? $field['taxonomy'] : $id;
+
     switch ($type) {
         // basic
         case 'text':
@@ -159,9 +162,9 @@ function custom_meta_box_field($field, $meta = null, $repeatable = null) {
         // tax_select
         case 'tax_select':
             echo '<select name="' . esc_attr($name) . '" id="' . esc_attr($id) . '"><option value="">Select One</option>'; // Select One
-            $terms = get_terms($id, 'get=all');
-            $post_terms = wp_get_object_terms(get_the_ID(), $id);
-            $taxonomy = get_taxonomy($id);
+            $terms = get_terms($taxonomy_name, 'get=all');
+            $post_terms = wp_get_object_terms(get_the_ID(), $taxonomy_name);
+            $taxonomy = get_taxonomy($taxonomy_name);
             $selected = $post_terms ? $taxonomy->hierarchical ? $post_terms[0]->term_id : $post_terms[0]->slug : null;
             foreach ($terms as $term) {
                 $term_value = $taxonomy->hierarchical ? $term->term_id : $term->slug;
@@ -171,9 +174,9 @@ function custom_meta_box_field($field, $meta = null, $repeatable = null) {
             break;
         // tax_checkboxes
         case 'tax_checkboxes':
-            $terms = get_terms($id, 'get=all');
-            $post_terms = wp_get_object_terms(get_the_ID(), $id);
-            $taxonomy = get_taxonomy($id);
+            $terms = get_terms($taxonomy_name, 'get=all');
+            $post_terms = wp_get_object_terms(get_the_ID(), $taxonomy_name);
+            $taxonomy = get_taxonomy($taxonomy_name);
             $checked = $post_terms ? $taxonomy->hierarchical ? $post_terms[0]->term_id : $post_terms[0]->slug : null;
             foreach ($terms as $term) {
                 $term_value = $taxonomy->hierarchical ? $term->term_id : $term->slug;
