@@ -115,7 +115,7 @@ function custom_meta_box_field($field, $meta = null, $repeatable = null) {
             foreach ($posts as $item)
                 echo '<option value="' . $item->ID . '"' . selected(is_array($meta) && in_array($item->ID, $meta), true, false) . '>' . $item->post_title . '</option>';
             $post_type_object = get_post_type_object($post_type);
-            echo '</select> &nbsp;<span class="description"><a href="' . admin_url('edit.php?post_type=' . $post_type[0] . '">' . __('Manage') . ' ' . $post_type_object->label) . '</a></span><br />' . $desc;
+            echo '</select> &nbsp;<span class="description"><a href="' . admin_url('edit.php?post_type=' . $post_type[0] . '">' . $post_type_object->label) . '</a></span><br />' . $desc;
             break;
         // post_checkboxes
         case 'post_checkboxes':
@@ -124,13 +124,13 @@ function custom_meta_box_field($field, $meta = null, $repeatable = null) {
             foreach ($posts as $item)
                 echo '<li><input type="checkbox" value="' . $item->ID . '" name="' . esc_attr($name) . '[]" id="' . esc_attr($id) . '-' . $item->ID . '"', is_array($meta) && in_array($item->ID, $meta) ? ' checked="checked"' : '', ' /><label for="' . esc_attr($id) . '-' . $item->ID . '">' . $item->post_title . '</label></li>';
             $post_type_object = get_post_type_object($post_type);
-            echo '</ul> ' . $desc, ' &nbsp;<span class="description"><a href="' . admin_url('edit.php?post_type=' . $post_type . '">Manage ' . $post_type_object->label) . '</a></span>';
+            echo '</ul> ' . $desc, ' &nbsp;<span class="description"><a href="' . admin_url('edit.php?post_type=' . $post_type . '">' . $post_type_object->label) . '</a></span>';
             break;
         // post_drop_sort
         case 'post_drop_sort':
             //areas
             $post_type_object = get_post_type_object($post_type);
-            echo '<p>' . $desc . ' &nbsp;<span class="description"><a href="' . admin_url('edit.php?post_type=' . $post_type . '">Manage ' . $post_type_object->label) . '</a></span></p><div class="post_drop_sort_areas">';
+            echo '<p>' . $desc . ' &nbsp;<span class="description"><a href="' . admin_url('edit.php?post_type=' . $post_type . '">' . $post_type_object->label) . '</a></span></p><div class="post_drop_sort_areas">';
             foreach ($areas as $area) {
                 echo '<ul id="area-' . $area['id'] . '" class="sort_list"><li class="post_drop_sort_area_name">' . $area['label'] . '</li>';
                 if (is_array($meta)) {
@@ -171,7 +171,7 @@ function custom_meta_box_field($field, $meta = null, $repeatable = null) {
                 $term_value = $taxonomy->hierarchical ? $term->term_id : $term->slug;
                 echo '<option value="' . $term_value . '"' . selected($selected, $term_value, false) . '>' . $term->name . '</option>';
             }
-            echo '</select> &nbsp;<span class="description"><a href="' . get_bloginfo('url') . '/wp-admin/edit-tags.php?taxonomy=' . $id . '">' . $taxonomy->label . '</a></span><br />' . $desc;
+            echo '</select> &nbsp;<span class="description"><a href="' . esc_url(home_url()) . '/wp-admin/edit-tags.php?taxonomy=' . $id . '">' . $taxonomy->label . '</a></span><br />' . $desc;
             break;
         // tax_checkboxes
         case 'tax_checkboxes':
@@ -183,7 +183,7 @@ function custom_meta_box_field($field, $meta = null, $repeatable = null) {
                 $term_value = $taxonomy->hierarchical ? $term->term_id : $term->slug;
                 echo '<input type="checkbox" value="' . $term_value . '" name="' . $id . '[]" id="term-' . $term_value . '"' . checked($checked, $term_value, false) . ' /> <label for="term-' . $term_value . '">' . $term->name . '</label><br />';
             }
-            echo '<span class="description">' . $field['desc'] . ' <a href="' . get_bloginfo('url') . '/wp-admin/edit-tags.php?taxonomy=' . $id . '&post_type=' . $page . '">Manage ' . $taxonomy->label . '</a></span>';
+            echo '<span class="description">' . $field['desc'] . ' <a href="' . esc_url(home_url()) . '/wp-admin/edit-tags.php?taxonomy=' . $id . '&post_type=' . $page . '">' . $taxonomy->label . '</a></span>';
             break;
         // date
         case 'date':
@@ -669,7 +669,8 @@ class Custom_Add_Meta_Box {
                 // save taxonomies
                 if (isset($_POST[$field['id']])) {
                     $term = $_POST[$field['id']];
-                    wp_set_object_terms($post_id, $term, $field['id']);
+                    $taxonomy_name = isset($field['taxonomy']) ? $field['taxonomy'] : $field['id'];
+                    wp_set_object_terms($post_id, $term, $taxonomy_name);
                 }
             } else {
                 // save the rest
